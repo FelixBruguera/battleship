@@ -1,6 +1,5 @@
 import pieceTypes from "./pieceTypes.json" with {type: 'json'}
 
-
 export default class Ship {
     constructor(name) {
         this.name = name

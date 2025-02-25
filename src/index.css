@@ -1,0 +1,26 @@
+.box {
+    height: 45px;
+    width: 45px;
+    border: 1px solid black;
+}
+#boards {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#user-board, #computer-board {
+    width: fit-content;
+    display: grid;
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+    gap: 0;
+}
+.piece {
+    border: 2px solid blue;
+}
+.hit {
+    border: 2px solid green;
+}
+.miss {
+    border: 2px solid red;
+}

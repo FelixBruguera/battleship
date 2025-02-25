@@ -1,12 +1,17 @@
 export default class Gameboard {
-    constructor(player) {
-        this.player = player
+    constructor() {
         this.pieces = []
         this.hits = []
         this.misses = []
     }
     place(ship, startPosition, endPosition) {
         this.pieces.push({piece: ship, coordinates: this.createCoords(startPosition, endPosition)})
+    }
+    validPlay(playCoords) {
+        if ((playCoords < 1) | (playCoords > 100)) { return false }
+        if (this.hits.includes(playCoords)) { return false }
+        if (this.misses.includes(playCoords)) { return false }
+        return true
     }
     createCoords(startPosition, endPosition) {
         let coordinates = []
@@ -18,6 +23,7 @@ export default class Gameboard {
         return coordinates
     }
     receiveAttack(playCoords) {
+        if (this.validPlay(playCoords) == false) { return "Invalid Play"}
         let result = this.pieces.find((piece) => piece.coordinates.includes(playCoords))
         if (result == undefined) {
             this.misses.push(playCoords)
@@ -26,6 +32,7 @@ export default class Gameboard {
         else {
             result.piece.hit()
             this.hits.push(playCoords)
+            if (result.piece.isSunk()) { return `Hit, ${result.piece.name} sunk` }
             return "Hit"
         }
     }

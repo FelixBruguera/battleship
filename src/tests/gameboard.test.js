@@ -4,11 +4,11 @@ import Ship from "../ship";
 let gameboard
 
 beforeEach(() => {
-    gameboard = new Gameboard("Player", Ship)
+    gameboard = new Gameboard()
   });
 
 describe("Places a ship correctly", () => {
-    it("When the coordinates are vertical", () => {
+    it("When the coordinates are horizontal", () => {
         gameboard.place(new Ship("Battleship"), 1, 4)
         let piece = gameboard.pieces[0]
         expect(piece.coordinates).toContain(1)
@@ -16,13 +16,31 @@ describe("Places a ship correctly", () => {
         expect(piece.coordinates).toContain(3)
         expect(piece.coordinates).toContain(4)
     })
-    it("When the coordinates are horizontal", () => {
+    it("When the coordinates are vertical", () => {
         gameboard.place(new Ship("Battleship"), 1, 31)
         let piece = gameboard.pieces[0]
         expect(piece.coordinates).toContain(1)
         expect(piece.coordinates).toContain(11)
         expect(piece.coordinates).toContain(21)
         expect(piece.coordinates).toContain(31)
+    })
+})
+
+describe("When a play is repeated", () => {
+    it("Returns false", () => {
+        gameboard.receiveAttack(5)
+        expect(gameboard.validPlay(5)).toBe(false)
+    })
+    it("Does not duplicate the play", () => {
+        gameboard.receiveAttack(5)
+        gameboard.receiveAttack(5)
+        expect(gameboard.misses).toStrictEqual([5])
+    })
+})
+describe("When a play is out of the board", () => {
+    it("Returns false", () => {
+        expect(gameboard.validPlay(0)).toBe(false)
+        expect(gameboard.validPlay(220)).toBe(false)
     })
 })
 
@@ -51,7 +69,7 @@ describe("Attack resulting in a hit", () => {
     it("Saves the coordinates of the hit", () => {
         expect(gameboard.hits).toContain(3)
     })
-    it("Calls hit() on the hitted piece", () => {
+    it("Calls hit() on the hit piece", () => {
         expect(gameboard.pieces[0].piece.hits).toBe(1)
     })
 })
