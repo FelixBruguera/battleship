@@ -3,40 +3,43 @@ export default class Computer {
         this.type = "computer"
         this.gameboard = gameboard
         this.opponentBoard = opponentBoard
-        this.availablePlays = [...new Array(101).keys()]
-        this.availablePlays.shift()
+        this.availablePlays = this.gameboard.createAvailableBoxes()
     }
-    randomPlay() {
-        return this.availablePlays.at(Math.floor(Math.random()*this.availablePlays.length))
+    getRandomElement(options) {
+        return options.at(Math.floor(Math.random()*options.length))
     }
-    verticalHit() {
-        let higher = this.opponentBoard.hits.at(-1)-10
-        let lower = this.opponentBoard.hits.at(-1)+10
-        if (this.opponentBoard.validPlay(higher)) { return higher}
-        if (this.opponentBoard.validPlay(lower)) { return lower}
-        return false
+    placeShip(ship) {
+        let availableBoxes = this.gameboard.availableBoxes
+        let startPosition = this.getRandomElement(availableBoxes)
+        let options = this.gameboard.posiblePositions(ship, startPosition)
+        let endPosition =  this.getRandomElement(options)
+        return this.gameboard.place(ship, startPosition, endPosition)
     }
-    horizontalHit() {
-        let right = this.opponentBoard.hits.at(-1)+1
-        let left = this.opponentBoard.hits.at(-1)-1
-        if (this.opponentBoard.validPlay(right)) { return right}
-        if (this.opponentBoard.validPlay(left)) { return left}
+    getAdjacentCoordinates() {
+        let lastHit = this.opponentBoard.hits.at(-1)
+        let row = this.gameboard.getRow(lastHit)
+        let col = this.gameboard.getColumn(lastHit)
+        // These are the coordinates above, below, right and left of the last hit
+        return [`${col}_${row-1}`, `${col}_${row+1}`, `${col+1}_${row}`, `${col-1}_${row}`]
+    }
+    removeCoordinate(coordinate) {
+        this.availablePlays = this.availablePlays.filter((coord) => coord != coordinate)
+    }
+    adjacentPlay(options) {
+        const validOptions = options.filter((play) => this.opponentBoard.validPlay(play))
+        if (validOptions.length > 0) { return this.getRandomElement(validOptions) }
         return false
     }
     play() {
-        let verticalHit = this.verticalHit()
-        if (verticalHit) {
-            let index = this.availablePlays.indexOf(verticalHit)
-            this.availablePlays.splice(index, 1)
-            return verticalHit }
-        let horizontalHit = this.horizontalHit()
-        if (horizontalHit) { 
-            let index = this.availablePlays.indexOf(horizontalHit)
-            this.availablePlays.splice(index, 1)
-            return horizontalHit }
-        let random = this.randomPlay()
-        let index = this.availablePlays.indexOf(random)
-        this.availablePlays.splice(index, 1)
-        return random
+        if (this.opponentBoard.hits.length > 0) {
+            let selection = this.adjacentPlay(this.getAdjacentCoordinates())
+            if (selection) {
+                this.removeCoordinate(selection)
+                return selection 
+            }
+        }
+        let randomPlay = this.getRandomElement(this.availablePlays)
+        this.removeCoordinate(randomPlay)
+        return randomPlay
     }
 }
