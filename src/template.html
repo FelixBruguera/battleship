@@ -6,9 +6,25 @@
     <title>Batleship</title>
 </head>
 <body>
-    <section id="boards">
-        <div id="user-board"></div>
-        <div id="computer-board"></div>
+    <nav>
+        <h1>Battleship</h1>
+    </nav>
+    <section id="game">
+        <div id="message-board">
+            <p id="player">System: </p>
+            <p id="message">Place your Ships</p>
+            <button id="restart" class="hidden">Play again</button>
+        </div>
+        <div id="boards">
+            <div class="board-with-title">
+                <p>Your fleet</p>
+                <div id="user-board"></div>
+            </div>
+            <div class="board-with-title">
+                <p>Enemy waters</p>
+                <div id="computer-board"></div>
+            </div>
+        </div>
     </section>
     
 </body>
