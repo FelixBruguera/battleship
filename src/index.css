@@ -114,12 +114,21 @@ p {
     }   
 }
 
-@media (max-width: 800px) {
+@media (min-width: 600px) and (max-width: 800px) {
     :root {
         font-size: 16px;
     }
 }
+
+@media (min-width: 500px) and (max-width: 600px) {
+    :root {
+        font-size: 12px;
+    }
+}
 @media (max-width: 500px) {
+    :root {
+        font-size: 15px;
+    }
     #boards {
         flex-direction: column;
     }
