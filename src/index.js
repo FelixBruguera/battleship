@@ -27,7 +27,6 @@ function handleResult(result, player) {
     }
     playerUI.textContent = player + ":"
     return message.textContent = " "+ result
-
 }
 function getDataAttribute(event, dataAttribute) {
     return event.target.dataset[dataAttribute]
@@ -37,7 +36,7 @@ function userPlays() {
         let coordinate = getDataAttribute(e, 'computerCoordinate')
         if (coordinate == undefined) { return handleResult("Invalid play, try again", "User") }
         let result = computer.gameboard.receiveAttack(coordinate)
-        computerGameboard.refreshBoard()
+        computerGameboard.updateBox(coordinate, result)
         if (computer.gameboard.allSunk()) { return gameOver("You")}
         handleResult(result, "User")
     }, {once: true})
@@ -46,7 +45,7 @@ function computerPlays() {
     setTimeout(() => {
         let coordinate = computer.play()
         let result = user.gameboard.receiveAttack(coordinate)
-        userGameboard.refreshBoard()
+        userGameboard.updateBox(coordinate, result)
         if (user.gameboard.allSunk()) { return gameOver("Computer")}
         handleResult(result, "Computer")
     }, 1000)

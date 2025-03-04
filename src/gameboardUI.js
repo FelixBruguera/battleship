@@ -20,20 +20,27 @@ export default class GameboardUI {
         }
     }
     colorBoxes(boxes, name) {
+        this.board.querySelectorAll(".piece-selection").forEach((box) => box.classList.remove("piece-selection"))
         boxes.forEach((box) => {
             box = this.board.querySelector(`[data-${this.type}-coordinate = '${box}']`)
             box.classList.add(name)
         })
     }
-    refreshBoard() {
-        this.colorBoxes(this.gameboard.hits, "hit")
-        this.colorBoxes(this.gameboard.misses, "miss")
+    updateBox(coordinate, result) {
+        const box = this.board.querySelector(`[data-${this.type}-coordinate = '${coordinate}']`)
+        if (result == 'Miss') { this.miss(box) }
+        else { this.hit(box) }
+    }
+    hit(box) {
+        box.classList.add("hit")
+    }
+    miss(box) {
+        box.classList.add("miss")
     }
     clearBoard() {
         this.board.querySelectorAll(".box").forEach((box) => box.className = "box")
     }
     colorPieces() {
-        this.clearBoard()
-        this.gameboard.pieces.forEach((piece) => this.colorBoxes(piece.coordinates, "piece"))
+        this.colorBoxes(this.gameboard.pieces.at(-1).coordinates, "piece")
     }
 }
